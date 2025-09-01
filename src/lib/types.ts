@@ -12,6 +12,7 @@ export type ScheduleMatch = {
   round_name?: string
   state_name?: string
   season_id?: number
+  season_name?: string
 }
 
 export interface LiveMatch {

@@ -7,7 +7,7 @@ export const dynamic = 'force-dynamic'
 
 async function getFixtures() {
   const supabase = await createClient()
-  
+
   const { data: fixtures, error } = await supabase
     .from('fixtures')
     .select(`
@@ -16,12 +16,12 @@ async function getFixtures() {
       away_team:away_team_id (id, name, logo)
     `)
     .order('start_time', { ascending: true })
-  
+
   if (error) {
     console.error('Error fetching fixtures:', error)
     throw new Error('Failed to fetch fixtures')
   }
-  
+
   // Transform the data to match the expected format
   return fixtures.map(fixture => ({
     id: fixture.id,
@@ -36,7 +36,8 @@ async function getFixtures() {
     league_logo: fixture.league_logo,
     round_name: fixture.round_name,
     state_name: fixture.state_name,
-    season_id: fixture.season_id
+    season_id: fixture.season_id,
+    season_name: fixture.season_name || '25/26'
   })) || []
 }
 
@@ -51,7 +52,7 @@ export default async function FixturesPage() {
           Stay up to date with all the upcoming matches. Filter by today, tomorrow, or view all upcoming fixtures.
         </p>
       </div>
-      
+
       <Suspense fallback={<LoadingFixtures />}>
         <FixturesClient initialMatches={fixtures} />
       </Suspense>

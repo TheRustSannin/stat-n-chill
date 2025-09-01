@@ -7,31 +7,38 @@ export default function HomePage() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section
-        className="relative overflow-hidden bg-gradient-to-br from-blue-50 via-white to-purple-50 py-16 md:py-24 lg:py-32"
-        style={{
-          background: "var(--background)",
-        }}
-      >
-        <div className="pattern-bg"></div>
-        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <section className="relative overflow-hidden py-16 md:py-24 lg:py-32">
+        {/* Background container with pattern */}
+        <div className="absolute inset-0 pattern-bg z-0"></div>
+        
+        {/* Gradient overlay to improve text readability */}
+        <div className="absolute inset-0 bg-gradient-to-b from-background/70 via-background/40 to-background/70 z-0"></div>
+        
+        {/* Content container with higher z-index */}
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 z-10">
           <div className="mx-auto max-w-3xl text-center">
             <h1
-              className="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl md:text-6xl animate-fade-in-up"
+              className="text-5xl font-bold tracking-tight sm:text-6xl md:text-7xl animate-fade-in-up"
               style={{
                 color: "var(--foreground)",
+                textShadow: "0 2px 10px rgba(0,0,0,0.2)"
               }}
             >
-              Your Chill Companion for <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-orange-600">Live Football Stats</span>
+              Your Chill Companion for <span 
+                className="text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-orange-600 dark:from-[var(--text-gradient-from)] dark:via-[var(--text-gradient-via)] dark:to-[var(--text-gradient-to)] font-black"
+                style={{
+                  textShadow: "none"
+                }}
+              >Live Football Stats</span>
             </h1>
-            <p className="mt-6 text-lg md:text-xl leading-8 text-foreground animate-fade-in-up animation-delay-200 max-w-2xl mx-auto">
+            <p className="mt-6 text-lg md:text-xl leading-9 text-foreground animate-fade-in-up animation-delay-200 max-w-2xl mx-auto font-bold">
               Blend live football data with chill insights. Get real-time stats, AI-powered analysis, and simulation tools all in one place.
             </p>
             <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-in-up animation-delay-400">
               <Button
                 asChild
                 size="lg"
-                className="bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 dark:from-[oklch(85%_0.08_95)] dark:via-[oklch(90%_0.06_95)] dark:to-[oklch(85%_0.08_95)] border-2 border-amber-600 dark:border-[oklch(80%_0.07_95)] hover:from-amber-600 hover:via-orange-600 hover:to-amber-700 dark:hover:from-[oklch(82%_0.08_95)] dark:hover:via-[oklch(88%_0.06_95)] dark:hover:to-[oklch(82%_0.08_95)] text-white dark:text-background font-semibold transition-all duration-200 shadow-lg hover:shadow-xl"
+                className="bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 dark:from-[oklch(85%_0.08_95)] dark:via-[oklch(90%_0.06_95)] dark:to-[oklch(85%_0.08_95)] border-2 border-amber-600 dark:border-[oklch(80%_0.07_95)] hover:from-amber-600 hover:via-orange-600 hover:to-amber-700 dark:hover:from-[oklch(82%_0.08_95)] dark:hover:via-[oklch(88%_0.06_95)] dark:hover:to-[oklch(82%_0.08_95)] text-white dark:text-background font-bold transition-all duration-200 shadow-lg hover:shadow-xl text-lg py-7 px-8"
               >
                 <Link href="/livescores">Get Started</Link>
               </Button>
@@ -39,7 +46,7 @@ export default function HomePage() {
                 asChild
                 size="lg"
                 variant="outline"
-                className="border-2 font-semibold transition-all duration-200 shadow-sm hover:shadow-md"
+                className="border-2 font-bold transition-all duration-200 shadow-sm hover:shadow-md bg-background/90 backdrop-blur-sm text-lg py-7 px-8 hover:bg-accent dark:hover:bg-accent dark:hover:text-accent-foreground"
               >
                 <Link href="/features">Explore Features</Link>
               </Button>
@@ -47,6 +54,7 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+    
 
       {/* Features Section */}
       <section className="py-16 md:py-24 lg:py-32 bg-slate-50 dark:bg-slate-900/30">

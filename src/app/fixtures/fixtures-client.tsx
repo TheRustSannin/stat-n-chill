@@ -26,26 +26,26 @@ export default function FixturesClient({ initialMatches }: { initialMatches: Sch
   // Subscribe to realtime updates and fetch team logos
   useEffect(() => {
     const supabase = createClient()
-    
+
     // Function to fetch team logos
     const fetchTeamLogos = async (teamIds: number[]) => {
       if (teamIds.length === 0) return
-      
+
       const { data: teams, error } = await supabase
         .from('teams')
         .select('id, name, logo')
         .in('id', teamIds)
-      
+
       if (error) {
         console.error('Error fetching team logos:', error)
         return
       }
-      
+
       // Update matches with logos
       setMatches(prev => prev.map(match => {
         const homeTeam = teams.find(team => team.id === match.home_team_id)
         const awayTeam = teams.find(team => team.id === match.away_team_id)
-        
+
         return {
           ...match,
           home_logo: homeTeam?.logo || match.home_logo,
@@ -73,16 +73,16 @@ export default function FixturesClient({ initialMatches }: { initialMatches: Sch
             newMatch.home_team_id,
             newMatch.away_team_id
           ].filter(Boolean)
-          
+
           if (teamIds.length > 0) {
             const { data: teams } = await supabase
               .from('teams')
               .select('id, name, logo')
               .in('id', teamIds)
-              
+
             const homeTeam = teams?.find(team => team.id === newMatch.home_team_id)
             const awayTeam = teams?.find(team => team.id === newMatch.away_team_id)
-            
+
             setMatches(prev => {
               const updatedMatch = {
                 id: newMatch.id,
@@ -97,10 +97,11 @@ export default function FixturesClient({ initialMatches }: { initialMatches: Sch
                 league_logo: newMatch.league_logo,
                 round_name: newMatch.round_name,
                 state_name: newMatch.state_name,
-                season_id: newMatch.season_id
+                season_id: newMatch.season_id,
+                season_name: newMatch.season_name
               }
-              
-              return [...prev, updatedMatch].sort((a, b) => 
+
+              return [...prev, updatedMatch].sort((a, b) =>
                 new Date(a.start_time).getTime() - new Date(b.start_time).getTime()
               )
             })
@@ -170,42 +171,39 @@ export default function FixturesClient({ initialMatches }: { initialMatches: Sch
       {/* Centered Filter Tabs */}
       <div className="flex justify-center space-x-2 md:space-x-4 mb-6 md:mb-8 mt-4 md:mt-6">
         <button
-          className={`px-3 py-2 md:px-5 md:py-2.5 rounded-lg transition-all duration-300 text-sm md:text-base ${
-            filter === "today" 
-              ? "bg-primary text-primary-foreground shadow-lg" 
+          className={`px-3 py-2 md:px-5 md:py-2.5 rounded-lg transition-all duration-300 text-sm md:text-base ${filter === "today"
+              ? "bg-primary text-primary-foreground shadow-lg"
               : "bg-muted text-muted-foreground hover:bg-accent hover:text-accent-foreground"
-          }`}
+            }`}
           onClick={() => setFilter("today")}
         >
           Today
         </button>
         <button
-          className={`px-3 py-2 md:px-5 md:py-2.5 rounded-lg transition-all duration-300 text-sm md:text-base ${
-            filter === "tomorrow" 
-              ? "bg-primary text-primary-foreground shadow-lg" 
+          className={`px-3 py-2 md:px-5 md:py-2.5 rounded-lg transition-all duration-300 text-sm md:text-base ${filter === "tomorrow"
+              ? "bg-primary text-primary-foreground shadow-lg"
               : "bg-muted text-muted-foreground hover:bg-accent hover:text-accent-foreground"
-          }`}
+            }`}
           onClick={() => setFilter("tomorrow")}
         >
           Tomorrow
         </button>
         <button
-          className={`px-3 py-2 md:px-5 md:py-2.5 rounded-lg transition-all duration-300 text-sm md:text-base ${
-            filter === "upcoming" 
-              ? "bg-primary text-primary-foreground shadow-lg" 
+          className={`px-3 py-2 md:px-5 md:py-2.5 rounded-lg transition-all duration-300 text-sm md:text-base ${filter === "upcoming"
+              ? "bg-primary text-primary-foreground shadow-lg"
               : "bg-muted text-muted-foreground hover:bg-accent hover:text-accent-foreground"
-          }`}
+            }`}
           onClick={() => setFilter("upcoming")}
         >
           Upcoming
         </button>
       </div>
-      
+
       {/* Table */}
-      <FixturesTable 
-        matches={filteredMatches} 
-        isMobile={isMobile} 
-        onMatchClick={handleMatchClick} 
+      <FixturesTable
+        matches={filteredMatches}
+        isMobile={isMobile}
+        onMatchClick={handleMatchClick}
       />
 
       {/* Modal */}

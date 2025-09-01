@@ -2,6 +2,8 @@
 
 import Image from "next/image"
 import { ScheduleMatch } from "@/lib/types"
+import { motion } from "framer-motion"
+import { useEffect, useState } from "react"
 
 interface FixturesTableProps {
   matches: ScheduleMatch[]
@@ -10,7 +12,26 @@ interface FixturesTableProps {
 }
 
 export default function FixturesTable({ matches, isMobile, onMatchClick }: FixturesTableProps) {
-  if (!matches.length) {
+  const [isMounted, setIsMounted] = useState(false)
+
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
+
+  if (!isMounted) {
+    return (
+      <div className="shadow-lg rounded-xl overflow-hidden bg-card text-card-foreground border border-border">
+        <div className="animate-pulse">
+          <div className="bg-muted h-12"></div>
+          {[...Array(5)].map((_, i) => (
+            <div key={i} className="h-16 border-b border-border"></div>
+          ))}
+        </div>
+      </div>
+    )
+  }
+
+  if (!matches || matches.length === 0) {
     return (
       <div className="text-center py-16 bg-card rounded-xl shadow-md border border-border">
         <div className="text-5xl mb-4">📅</div>
@@ -24,7 +45,7 @@ export default function FixturesTable({ matches, isMobile, onMatchClick }: Fixtu
     <div className="shadow-lg rounded-xl overflow-hidden bg-card text-card-foreground border border-border">
       {/* Desktop/Tablet View */}
       {!isMobile ? (
-        <table className="min-w-full text-left text-sm">
+        <table className="w-full text-left text-sm">
           <thead className="bg-muted">
             <tr>
               <th className="px-4 py-3 md:px-6 md:py-4 font-semibold">League</th>
@@ -38,7 +59,7 @@ export default function FixturesTable({ matches, isMobile, onMatchClick }: Fixtu
             {matches.map((match, index) => (
               <tr
                 key={match.id}
-                className={`border-b border-border transition-all duration-300 cursor-pointer hover:bg-accent/30 ${
+                className={`border-b border-border transition-colors duration-200 cursor-pointer hover:bg-accent/30 ${
                   index % 2 === 0 ? 'bg-card' : 'bg-muted/20'
                 }`}
                 onClick={() => onMatchClick(match.id)}
@@ -49,7 +70,8 @@ export default function FixturesTable({ matches, isMobile, onMatchClick }: Fixtu
                       <Image
                         src={match.league_logo}
                         alt={match.league_name || "League"}
-                        fill
+                        width={32}
+                        height={32}
                         className="rounded object-contain"
                       />
                     </div>
@@ -65,7 +87,8 @@ export default function FixturesTable({ matches, isMobile, onMatchClick }: Fixtu
                         <Image
                           src={match.home_logo}
                           alt={match.home_team}
-                          fill
+                          width={24}
+                          height={24}
                           className="rounded object-contain"
                         />
                       </div>
@@ -80,7 +103,8 @@ export default function FixturesTable({ matches, isMobile, onMatchClick }: Fixtu
                         <Image
                           src={match.away_logo}
                           alt={match.away_team}
-                          fill
+                          width={24}
+                          height={24}
                           className="rounded object-contain"
                         />
                       </div>
@@ -92,7 +116,9 @@ export default function FixturesTable({ matches, isMobile, onMatchClick }: Fixtu
                   {new Date(match.start_time).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                 </td>
                 <td className="px-4 py-3 md:px-6 md:py-4">
-                  <span className="text-primary hover:underline text-sm md:text-base">View</span>
+                  <span className="text-primary text-sm md:text-base hover:underline">
+                    View
+                  </span>
                 </td>
               </tr>
             ))}
@@ -104,7 +130,7 @@ export default function FixturesTable({ matches, isMobile, onMatchClick }: Fixtu
           {matches.map((match, index) => (
             <div
               key={match.id}
-              className={`p-3 transition-all duration-300 cursor-pointer hover:bg-accent/30 ${
+              className={`p-3 transition-colors duration-200 cursor-pointer hover:bg-accent/30 ${
                 index % 2 === 0 ? 'bg-card' : 'bg-muted/20'
               }`}
               onClick={() => onMatchClick(match.id)}
@@ -116,7 +142,8 @@ export default function FixturesTable({ matches, isMobile, onMatchClick }: Fixtu
                     <Image
                       src={match.league_logo}
                       alt={match.league_name || "League"}
-                      fill
+                      width={20}
+                      height={20}
                       className="rounded object-contain"
                     />
                   </div>
@@ -136,7 +163,8 @@ export default function FixturesTable({ matches, isMobile, onMatchClick }: Fixtu
                         <Image
                           src={match.home_logo}
                           alt={match.home_team}
-                          fill
+                          width={24}
+                          height={24}
                           className="rounded object-contain"
                         />
                       ) : (
@@ -155,7 +183,8 @@ export default function FixturesTable({ matches, isMobile, onMatchClick }: Fixtu
                         <Image
                           src={match.away_logo}
                           alt={match.away_team}
-                          fill
+                          width={24}
+                          height={24}
                           className="rounded object-contain"
                         />
                       ) : (
@@ -173,7 +202,9 @@ export default function FixturesTable({ matches, isMobile, onMatchClick }: Fixtu
                   <span className="text-sm font-semibold whitespace-nowrap">
                     {new Date(match.start_time).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                   </span>
-                  <span className="text-primary text-xs mt-1 whitespace-nowrap">View →</span>
+                  <span className="text-primary text-xs mt-1 whitespace-nowrap hover:underline">
+                    View →
+                  </span>
                 </div>
               </div>
             </div>
