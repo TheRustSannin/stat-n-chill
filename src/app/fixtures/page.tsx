@@ -48,9 +48,7 @@ export default async function FixturesPage() {
     <div className="container mx-auto px-4 py-8">
       <div className="text-center mb-10 animate-fade-in-up">
         <h1 className="text-4xl font-bold mb-4 text-foreground">Fixtures & Schedule</h1>
-        <p className="text-muted-foreground max-w-2xl mx-auto">
-          Stay up to date with all the upcoming matches. Filter by today, tomorrow, or view all upcoming fixtures.
-        </p>
+      
       </div>
 
       <Suspense fallback={<LoadingFixtures />}>
