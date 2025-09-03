@@ -252,7 +252,7 @@
   background-image: url('/pattern-2.jpg');
   background-repeat: repeat;
   background-size: contain;
-  opacity: 0.1; /* max intensity */
+  opacity: 0.01; /* max intensity */
   animation: fadePattern 12s ease-in-out infinite alternate;
   pointer-events: none;
 }

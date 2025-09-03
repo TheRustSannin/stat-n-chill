@@ -18,6 +18,15 @@ export default function FixturesTable({ matches, isMobile, onMatchClick }: Fixtu
     setIsMounted(true)
   }, [])
 
+  const formatMatchDate = (dateString: string) => {
+    const date = new Date(dateString)
+    return date.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric'
+    })
+  }
+
   if (!isMounted) {
     return (
       <div className="shadow-lg rounded-xl overflow-hidden bg-card text-card-foreground border border-border">
@@ -51,7 +60,7 @@ export default function FixturesTable({ matches, isMobile, onMatchClick }: Fixtu
               <th className="px-4 py-3 md:px-6 md:py-4 font-semibold">League</th>
               <th className="px-4 py-3 md:px-6 md:py-4 font-semibold">Home</th>
               <th className="px-4 py-3 md:px-6 md:py-4 font-semibold">Away</th>
-              <th className="px-4 py-3 md:px-6 md:py-4 font-semibold">Time</th>
+              <th className="px-4 py-3 md:px-6 md:py-4 font-semibold">Date</th>
               <th className="px-4 py-3 md:px-6 md:py-4 font-semibold">Details</th>
             </tr>
           </thead>
@@ -113,7 +122,7 @@ export default function FixturesTable({ matches, isMobile, onMatchClick }: Fixtu
                   </div>
                 </td>
                 <td className="px-4 py-3 md:px-6 md:py-4 font-semibold text-foreground text-sm md:text-base">
-                  {new Date(match.start_time).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                  {formatMatchDate(match.start_time)}
                 </td>
                 <td className="px-4 py-3 md:px-6 md:py-4">
                   <span className="text-primary text-sm md:text-base hover:underline">
@@ -197,10 +206,10 @@ export default function FixturesTable({ matches, isMobile, onMatchClick }: Fixtu
                   </div>
                 </div>
                 
-                {/* Time and view button */}
+                {/* Date and view button */}
                 <div className="flex flex-col items-end ml-2">
                   <span className="text-sm font-semibold whitespace-nowrap">
-                    {new Date(match.start_time).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                    {formatMatchDate(match.start_time)}
                   </span>
                   <span className="text-primary text-xs mt-1 whitespace-nowrap hover:underline">
                     View →

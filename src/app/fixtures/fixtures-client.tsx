@@ -164,38 +164,53 @@ export default function FixturesClient({ initialMatches }: { initialMatches: Sch
     return matchDate > today // upcoming
   })
 
+  const getMatchCount = (filterType: Filter) => {
+    return matches.filter((m) => {
+      const matchDate = new Date(m.start_time)
+      if (filterType === "today") {
+        return matchDate.toDateString() === today.toDateString()
+      } else if (filterType === "tomorrow") {
+        return matchDate.toDateString() === tomorrow.toDateString()
+      }
+      return matchDate > today
+    }).length
+  }
+
   const selectedMatchData = matches.find((m) => m.id === selectedMatch)
 
   return (
     <div className="max-w-6xl mx-auto">
-      {/* Centered Filter Tabs */}
-      <div className="flex justify-center space-x-2 md:space-x-4 mb-6 md:mb-8 mt-4 md:mt-6">
+      {/* Tab Navigation */}
+      <div className="flex border-b mb-6">
         <button
-          className={`px-3 py-2 md:px-5 md:py-2.5 rounded-lg transition-all duration-300 text-sm md:text-base ${filter === "today"
-              ? "bg-primary text-primary-foreground shadow-lg"
-              : "bg-muted text-muted-foreground hover:bg-accent hover:text-accent-foreground"
-            }`}
+          className={`px-4 py-2 font-semibold ${
+            filter === "today" 
+              ? 'border-b-2 border-primary text-primary' 
+              : 'text-muted-foreground hover:text-foreground'
+          }`}
           onClick={() => setFilter("today")}
         >
-          Today
+          Today ({getMatchCount("today")})
         </button>
         <button
-          className={`px-3 py-2 md:px-5 md:py-2.5 rounded-lg transition-all duration-300 text-sm md:text-base ${filter === "tomorrow"
-              ? "bg-primary text-primary-foreground shadow-lg"
-              : "bg-muted text-muted-foreground hover:bg-accent hover:text-accent-foreground"
-            }`}
+          className={`px-4 py-2 font-semibold ${
+            filter === "tomorrow" 
+              ? 'border-b-2 border-primary text-primary' 
+              : 'text-muted-foreground hover:text-foreground'
+          }`}
           onClick={() => setFilter("tomorrow")}
         >
-          Tomorrow
+          Tomorrow ({getMatchCount("tomorrow")})
         </button>
         <button
-          className={`px-3 py-2 md:px-5 md:py-2.5 rounded-lg transition-all duration-300 text-sm md:text-base ${filter === "upcoming"
-              ? "bg-primary text-primary-foreground shadow-lg"
-              : "bg-muted text-muted-foreground hover:bg-accent hover:text-accent-foreground"
-            }`}
+          className={`px-4 py-2 font-semibold ${
+            filter === "upcoming" 
+              ? 'border-b-2 border-primary text-primary' 
+              : 'text-muted-foreground hover:text-foreground'
+          }`}
           onClick={() => setFilter("upcoming")}
         >
-          Upcoming
+          Upcoming ({getMatchCount("upcoming")})
         </button>
       </div>
 

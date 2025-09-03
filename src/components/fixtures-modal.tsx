@@ -3,6 +3,7 @@
 import Image from "next/image"
 import { ScheduleMatch } from "@/lib/types"
 import { motion, AnimatePresence } from "framer-motion"
+import { useEffect, useState } from "react"
 
 interface FixturesModalProps {
   match: ScheduleMatch
@@ -10,6 +11,21 @@ interface FixturesModalProps {
 }
 
 export default function FixturesModal({ match, onClose }: FixturesModalProps) {
+  const [showDay, setShowDay] = useState(false)
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setShowDay(prev => !prev)
+    }, 2000) // Change every 2 seconds
+
+    return () => clearInterval(interval)
+  }, [])
+
+  const getDayOfWeek = (dateString: string) => {
+    const date = new Date(dateString)
+    return date.toLocaleDateString('en-US', { weekday: 'long' }).toUpperCase()
+  }
+
   return (
     <AnimatePresence>
       <motion.div
@@ -98,23 +114,38 @@ export default function FixturesModal({ match, onClose }: FixturesModalProps) {
               <div className="text-xs md:text-sm text-muted-foreground mt-1">Home Team</div>
             </motion.div>
             
-            {/* VS Section - Center */}
+            {/* VS/Day Section - Center */}
             <motion.div 
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ type: "spring", delay: 0.3 }}
               className="flex flex-col items-center justify-center w-1/5 md:w-1/3 px-2"
             >
-              <motion.div 
-                animate={{ 
-                  scale: [1, 1.1, 1],
-                  color: ["var(--primary)", "var(--accent)", "var(--primary)"]
-                }}
-                transition={{ duration: 2, repeat: Infinity }}
-                className="text-lg md:text-2xl lg:text-3xl font-bold"
-              >
-                VS
-              </motion.div>
+              <AnimatePresence mode="wait">
+                {showDay ? (
+                  <motion.div
+                    key="day"
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 1.2 }}
+                    transition={{ duration: 0.5 }}
+                    className="text-lg md:text-2xl lg:text-3xl font-bold text-center"
+                  >
+                    {getDayOfWeek(match.start_time)}
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="vs"
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 1.2 }}
+                    transition={{ duration: 0.5 }}
+                    className="text-lg md:text-2xl lg:text-3xl font-bold text-center"
+                  >
+                    VS
+                  </motion.div>
+                )}
+              </AnimatePresence>
               <div className="text-xs md:text-sm text-muted-foreground mt-2 text-center">
                 {new Date(match.start_time).toLocaleDateString()}
               </div>

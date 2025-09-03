@@ -31,7 +31,7 @@ export default function HomePage() {
                 }}
               >Live Football Stats</span>
             </h1>
-            <p className="mt-6 text-lg md:text-xl leading-9 text-foreground animate-fade-in-up animation-delay-200 max-w-2xl mx-auto font-bold">
+            <p className="mt-6 text-lg md:text-xl leading-9 text-foreground animate-fade-in-up animation-delay-200 max-w-2xl mx-auto font-medium">
               Blend live football data with chill insights. Get real-time stats, AI-powered analysis, and simulation tools all in one place.
             </p>
             <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-in-up animation-delay-400">
