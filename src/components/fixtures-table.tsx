@@ -2,7 +2,7 @@
 
 import Image from "next/image"
 import { ScheduleMatch } from "@/lib/types"
-import { motion } from "framer-motion"
+import { motion, Variants } from "framer-motion"
 import { useEffect, useState } from "react"
 
 interface FixturesTableProps {
@@ -11,11 +11,120 @@ interface FixturesTableProps {
   onMatchClick: (id: number) => void
 }
 
+// Animation variants with proper TypeScript typing
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.07,
+      delayChildren: 0.1,
+      when: "beforeChildren"
+    }
+  }
+}
+
+const tableRowVariants: Variants = {
+  hidden: { 
+    opacity: 0, 
+    y: 20,
+    transition: {
+      duration: 0.3
+    }
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      type: "spring",
+      stiffness: 300,
+      damping: 24,
+      duration: 0.5
+    }
+  },
+  hover: {
+    scale: 1.01,
+    backgroundColor: "var(--hover-bg)",
+    transition: {
+      type: "spring",
+      stiffness: 400,
+      damping: 17,
+      duration: 0.2
+    }
+  },
+  tap: {
+    scale: 0.995
+  }
+}
+
+const mobileCardVariants: Variants = {
+  hidden: { 
+    opacity: 0, 
+    y: 15,
+    scale: 0.98
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: {
+      type: "spring",
+      stiffness: 300,
+      damping: 22,
+      duration: 0.4
+    }
+  },
+  hover: {
+    scale: 1.01,
+    y: -2,
+    backgroundColor: "var(--hover-bg)",
+    transition: {
+      type: "spring",
+      stiffness: 400,
+      damping: 17,
+      duration: 0.2
+    }
+  },
+  tap: {
+    scale: 0.995
+  }
+}
+
+const logoVariants: Variants = {
+  rest: { scale: 1, rotate: 0 },
+  hover: { 
+    scale: 1.15, 
+    rotate: [0, -5, 0],
+    transition: {
+      rotate: {
+        repeat: 1,
+        duration: 0.4
+      },
+      scale: {
+        type: "spring",
+        stiffness: 400,
+        damping: 10
+      }
+    }
+  }
+}
+
+const viewButtonVariants: Variants = {
+  rest: { x: 0 },
+  hover: { 
+    x: 3,
+    color: "var(--gold-hover)"
+  }
+}
+
 export default function FixturesTable({ matches, isMobile, onMatchClick }: FixturesTableProps) {
   const [isMounted, setIsMounted] = useState(false)
+  const [isDarkMode, setIsDarkMode] = useState(false)
 
   useEffect(() => {
     setIsMounted(true)
+    // Check if dark mode is enabled
+    setIsDarkMode(document.documentElement.classList.contains('dark'))
   }, [])
 
   const formatMatchDate = (dateString: string) => {
@@ -29,53 +138,90 @@ export default function FixturesTable({ matches, isMobile, onMatchClick }: Fixtu
 
   if (!isMounted) {
     return (
-      <div className="shadow-lg rounded-xl overflow-hidden bg-card text-card-foreground border border-border">
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.3 }}
+        className="shadow-lg rounded-xl overflow-hidden bg-card text-card-foreground border border-border"
+      >
         <div className="animate-pulse">
           <div className="bg-muted h-12"></div>
           {[...Array(5)].map((_, i) => (
             <div key={i} className="h-16 border-b border-border"></div>
           ))}
         </div>
-      </div>
+      </motion.div>
     )
   }
 
   if (!matches || matches.length === 0) {
     return (
-      <div className="text-center py-16 bg-card rounded-xl shadow-md border border-border">
-        <div className="text-5xl mb-4">📅</div>
+      <motion.div 
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4 }}
+        className="text-center py-16 bg-card rounded-xl shadow-md border border-border"
+      >
+        <motion.div 
+          animate={{ y: [0, -5, 0] }}
+          transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
+          className="text-5xl mb-4"
+        >
+          📅
+        </motion.div>
         <h3 className="text-xl font-semibold text-foreground mb-2">No fixtures found</h3>
         <p className="text-muted-foreground">Try selecting a different filter or check back later.</p>
-      </div>
+      </motion.div>
     )
   }
 
   return (
-    <div className="shadow-lg rounded-xl overflow-hidden bg-card text-card-foreground border border-border">
+    <motion.div 
+      initial="hidden"
+      animate="visible"
+      variants={containerVariants}
+      className="shadow-lg rounded-xl overflow-hidden bg-card text-card-foreground border border-border"
+      style={{
+        // Define CSS variables for theme-aware animations
+        '--hover-bg': isDarkMode ? 'rgba(255, 255, 145, 0.1)' : 'rgba(0, 0, 0, 0.03)',
+        '--gold-hover': isDarkMode ? 'oklch(95% 0.15 95)' : 'oklch(30% 0.08 95)',
+      } as React.CSSProperties}
+    >
       {/* Desktop/Tablet View */}
       {!isMobile ? (
         <table className="w-full text-left text-sm">
           <thead className="bg-muted">
-            <tr>
+            <motion.tr 
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4 }}
+            >
               <th className="px-4 py-3 md:px-6 md:py-4 font-semibold">League</th>
               <th className="px-4 py-3 md:px-6 md:py-4 font-semibold">Home</th>
               <th className="px-4 py-3 md:px-6 md:py-4 font-semibold">Away</th>
               <th className="px-4 py-3 md:px-6 md:py-4 font-semibold">Date</th>
               <th className="px-4 py-3 md:px-6 md:py-4 font-semibold">Details</th>
-            </tr>
+            </motion.tr>
           </thead>
           <tbody>
             {matches.map((match, index) => (
-              <tr
+              <motion.tr
                 key={match.id}
-                className={`border-b border-border transition-colors duration-200 cursor-pointer hover:bg-accent/30 ${
+                variants={tableRowVariants}
+                whileHover="hover"
+                whileTap="tap"
+                className={`border-b border-border cursor-pointer ${
                   index % 2 === 0 ? 'bg-card' : 'bg-muted/20'
                 }`}
                 onClick={() => onMatchClick(match.id)}
               >
                 <td className="px-4 py-3 md:px-6 md:py-4 flex items-center space-x-2 md:space-x-3">
                   {match.league_logo && (
-                    <div className="relative h-6 w-6 md:h-8 md:w-8 flex-shrink-0">
+                    <motion.div 
+                      variants={logoVariants}
+                      whileHover="hover"
+                      className="relative h-6 w-6 md:h-8 md:w-8 flex-shrink-0"
+                    >
                       <Image
                         src={match.league_logo}
                         alt={match.league_name || "League"}
@@ -83,7 +229,7 @@ export default function FixturesTable({ matches, isMobile, onMatchClick }: Fixtu
                         height={32}
                         className="rounded object-contain"
                       />
-                    </div>
+                    </motion.div>
                   )}
                   <span className="text-foreground text-sm md:text-base truncate max-w-[120px] md:max-w-none">
                     {match.league_name}
@@ -92,7 +238,11 @@ export default function FixturesTable({ matches, isMobile, onMatchClick }: Fixtu
                 <td className="px-4 py-3 md:px-6 md:py-4 font-medium text-foreground">
                   <div className="flex items-center space-x-2">
                     {match.home_logo && (
-                      <div className="relative h-5 w-5 md:h-6 md:w-6">
+                      <motion.div 
+                        variants={logoVariants}
+                        whileHover="hover"
+                        className="relative h-5 w-5 md:h-6 md:w-6"
+                      >
                         <Image
                           src={match.home_logo}
                           alt={match.home_team}
@@ -100,7 +250,7 @@ export default function FixturesTable({ matches, isMobile, onMatchClick }: Fixtu
                           height={24}
                           className="rounded object-contain"
                         />
-                      </div>
+                      </motion.div>
                     )}
                     <span className="text-sm md:text-base truncate max-w-[80px] md:max-w-none">{match.home_team}</span>
                   </div>
@@ -108,7 +258,11 @@ export default function FixturesTable({ matches, isMobile, onMatchClick }: Fixtu
                 <td className="px-4 py-3 md:px-6 md:py-4 font-medium text-foreground">
                   <div className="flex items-center space-x-2">
                     {match.away_logo && (
-                      <div className="relative h-5 w-5 md:h-6 md:w-6">
+                      <motion.div 
+                        variants={logoVariants}
+                        whileHover="hover"
+                        className="relative h-5 w-5 md:h-6 md:w-6"
+                      >
                         <Image
                           src={match.away_logo}
                           alt={match.away_team}
@@ -116,7 +270,7 @@ export default function FixturesTable({ matches, isMobile, onMatchClick }: Fixtu
                           height={24}
                           className="rounded object-contain"
                         />
-                      </div>
+                      </motion.div>
                     )}
                     <span className="text-sm md:text-base truncate max-w-[80px] md:max-w-none">{match.away_team}</span>
                   </div>
@@ -124,12 +278,16 @@ export default function FixturesTable({ matches, isMobile, onMatchClick }: Fixtu
                 <td className="px-4 py-3 md:px-6 md:py-4 font-semibold text-foreground text-sm md:text-base">
                   {formatMatchDate(match.start_time)}
                 </td>
-                <td className="px-4 py-3 md:px-6 md:py-4">
+                <motion.td 
+                  variants={viewButtonVariants}
+                  whileHover="hover"
+                  className="px-4 py-3 md:px-6 md:py-4"
+                >
                   <span className="text-primary text-sm md:text-base hover:underline">
                     View
                   </span>
-                </td>
-              </tr>
+                </motion.td>
+              </motion.tr>
             ))}
           </tbody>
         </table>
@@ -137,9 +295,12 @@ export default function FixturesTable({ matches, isMobile, onMatchClick }: Fixtu
         // Mobile View (optimized for small screens)
         <div className="divide-y divide-border">
           {matches.map((match, index) => (
-            <div
+            <motion.div
               key={match.id}
-              className={`p-3 transition-colors duration-200 cursor-pointer hover:bg-accent/30 ${
+              variants={mobileCardVariants}
+              whileHover="hover"
+              whileTap="tap"
+              className={`p-3 cursor-pointer ${
                 index % 2 === 0 ? 'bg-card' : 'bg-muted/20'
               }`}
               onClick={() => onMatchClick(match.id)}
@@ -147,7 +308,11 @@ export default function FixturesTable({ matches, isMobile, onMatchClick }: Fixtu
               {/* League info */}
               <div className="flex items-center mb-2">
                 {match.league_logo && (
-                  <div className="relative h-5 w-5 mr-2 flex-shrink-0">
+                  <motion.div 
+                    variants={logoVariants}
+                    whileHover="hover"
+                    className="relative h-5 w-5 mr-2 flex-shrink-0"
+                  >
                     <Image
                       src={match.league_logo}
                       alt={match.league_name || "League"}
@@ -155,7 +320,7 @@ export default function FixturesTable({ matches, isMobile, onMatchClick }: Fixtu
                       height={20}
                       className="rounded object-contain"
                     />
-                  </div>
+                  </motion.div>
                 )}
                 <span className="text-xs text-muted-foreground truncate">
                   {match.league_name}
@@ -169,13 +334,15 @@ export default function FixturesTable({ matches, isMobile, onMatchClick }: Fixtu
                   <div className="flex items-center mb-1">
                     <div className="relative h-6 w-6 mr-2 flex-shrink-0">
                       {match.home_logo ? (
-                        <Image
-                          src={match.home_logo}
-                          alt={match.home_team}
-                          width={24}
-                          height={24}
-                          className="rounded object-contain"
-                        />
+                        <motion.div variants={logoVariants} whileHover="hover">
+                          <Image
+                            src={match.home_logo}
+                            alt={match.home_team}
+                            width={24}
+                            height={24}
+                            className="rounded object-contain"
+                          />
+                        </motion.div>
                       ) : (
                         <div className="h-6 w-6 bg-muted rounded-full flex items-center justify-center">
                           <span className="text-xs">H</span>
@@ -189,13 +356,15 @@ export default function FixturesTable({ matches, isMobile, onMatchClick }: Fixtu
                   <div className="flex items-center">
                     <div className="relative h-6 w-6 mr-2 flex-shrink-0">
                       {match.away_logo ? (
-                        <Image
-                          src={match.away_logo}
-                          alt={match.away_team}
-                          width={24}
-                          height={24}
-                          className="rounded object-contain"
-                        />
+                        <motion.div variants={logoVariants} whileHover="hover">
+                          <Image
+                            src={match.away_logo}
+                            alt={match.away_team}
+                            width={24}
+                            height={24}
+                            className="rounded object-contain"
+                          />
+                        </motion.div>
                       ) : (
                         <div className="h-6 w-6 bg-muted rounded-full flex items-center justify-center">
                           <span className="text-xs">A</span>
@@ -207,19 +376,26 @@ export default function FixturesTable({ matches, isMobile, onMatchClick }: Fixtu
                 </div>
                 
                 {/* Date and view button */}
-                <div className="flex flex-col items-end ml-2">
+                <motion.div 
+                  variants={viewButtonVariants}
+                  whileHover="hover"
+                  className="flex flex-col items-end ml-2"
+                >
                   <span className="text-sm font-semibold whitespace-nowrap">
                     {formatMatchDate(match.start_time)}
                   </span>
-                  <span className="text-primary text-xs mt-1 whitespace-nowrap hover:underline">
+                  <motion.span 
+                    whileHover={{ x: 3 }}
+                    className="text-primary text-xs mt-1 whitespace-nowrap"
+                  >
                     View →
-                  </span>
-                </div>
+                  </motion.span>
+                </motion.div>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
       )}
-    </div>
+    </motion.div>
   )
 }

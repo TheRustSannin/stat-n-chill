@@ -47,7 +47,7 @@
   --text-gradient-to: oklch(20% 0.12 95);
 }
 
-/* 🌚 Dark theme (golden-rich) */
+/* 🌚 Dark theme (golden-rich) - Updated hover/button colors only */
 .dark {
   --background: oklch(20.5% 0.008 285); /* #1A1C1E */
   --foreground: oklch(96.5% 0.05 95);   /* #FEF1AA */
@@ -81,13 +81,13 @@
   --sidebar-accent-foreground: oklch(96.5% 0.05 95);
   --sidebar-border: oklch(35% 0.02 285);
   --sidebar-ring: oklch(65% 0.15 95);
-  --button-gradient-from: oklch(85% 0.08 95);
-  --button-gradient-via: oklch(90% 0.06 95);
-  --button-gradient-to: oklch(85% 0.08 95);
-  --button-border: oklch(80% 0.07 95);
-  --text-gradient-from: oklch(94% 0.04 95);
-  --text-gradient-via: oklch(88% 0.07 95);
-  --text-gradient-to: oklch(82% 0.10 95);
+  --button-gradient-from: oklch(95% 0.15 95); /* Updated to #FFFF91 */
+  --button-gradient-via: oklch(90% 0.12 95);  /* Updated to golden yellow */
+  --button-gradient-to: oklch(85% 0.15 95);   /* Updated to #FFFF91 */
+  --button-border: oklch(90% 0.1 95);         /* Updated to golden yellow */
+  --text-gradient-from: oklch(95% 0.15 95);   /* Updated to #FFFF91 */
+  --text-gradient-via: oklch(90% 0.12 95);    /* Updated to golden yellow */
+  --text-gradient-to: oklch(85% 0.15 95);     /* Updated to #FFFF91 */
 }
 
 
@@ -168,7 +168,7 @@
   100% {
     transform: translateY(0);
   }
-  50% {
+ 50% {
     transform: translateY(-5px);
   }
 }
@@ -262,3 +262,23 @@
   to   { opacity: 0.05; }
 }
 
+/* Gold hover effects using #FFFF91 color */
+.hover-gold:hover {
+  color: oklch(95% 0.15 95); /* #FFFF91 */
+  transition: color 0.2s ease;
+}
+
+.hover-bg-gold:hover {
+  background-color: oklch(95% 0.15 95); /* #FFFF91 */
+  color: oklch(20.5% 0.008 285);
+  transition: all 0.2s ease;
+}
+
+.border-gold {
+  border-color: oklch(95% 0.15 95); /* #FFFF91 */
+}
+
+.hover-border-gold:hover {
+  border-color: oklch(95% 0.15 95); /* #FFFF91 */
+  transition: border-color 0.2s ease;
+}
